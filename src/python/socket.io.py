@@ -17,36 +17,34 @@ app = socketio.WSGIApp(sio)
 client_sid: dict[str] = {'nodejs': None, 'chrome': None}
 
 
-def logger(sid: str, value: str, *args: str):
+def logger(value: str, args: list[str]):
     _ = ''.join(['[%s]' % s for s in args])
-    sio.emit('python_logger', value, room=sid)
+    sio.emit('python_logger', value, room=client_sid['nodejs'])
     print(_)
     return _
 
 
 def exe_edit(value: int) -> None:
-    logger(client_sid['nodejs'], 'Server Opened', 'python', 'logger')
     for i in range(value):
-        sio.emit('python_executing', i, room=client_sid['chrome'])
-    logger(client_sid['nodejs'], 'Server Opened', 'python', 'logger')
+        sio.emit('python_Editing', i, room=client_sid['chrome'])
 
 
 @sio.event
 def connect(sid: str, environ):
-    logger(sid, 'Connected. sid = %s' % sid, 'python')
+    logger('Connected: %s' % sid, ['python'])
 
 
 @sio.event
 def define_client(sid: str, value):
     client_sid[value] = sid
-    print('[python][sid] => ' + json.dumps(client_sid))
+    logger('%s: %s' % (value, sid), ['python', 'define_client'])
 
 
 @sio.event
 def StartEdit(sid: str, value):
-    print('[python][ctrl] => `Request accepted.`')
-    sio.emit('python_start_request', '[python][ctrl] => `Request accepted.`', room=client_sid['nodejs'])
+    logger('Editor Started', ['python', 'logger'])
     exe_edit(value)
+    logger('Editor Finished', ['python', 'logger'])
 
 
 @sio.event
