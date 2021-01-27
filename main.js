@@ -7,7 +7,6 @@ const { PythonShell } = require('python-shell');
 // Socket.io Client
 const io = require('socket.io-client');
 
-
 //----------Electron----------//
 // Electron Window
 let window;
@@ -57,28 +56,22 @@ function shortcut(key) {
         window.webContents.send(key, true);
     });
 }
-//----------Electron----------//
-
+//----------------------------//
 
 //----------TMP----------//
-function log(value, ...args) {
+/**
+ * 
+ * @param {string} value log
+ * @param  {...string} args logger name
+ */
+function logger(value, ...args) {
     const _ = (function (args) { let str = ''; args.forEach(function (e) { str += `[${e}]` }); return str })(args) + ' ' + String(value);
     console.log(_);
     return _
 }
-/**
- * tem function for test
- * @param {object} event
- * @param {string} file 'xxx.py'
- * @returns {string} 'started'
- */
-function python_ctrl(event, file) {
-    socket.emit('first', 'hello', function () { });
-    return 'started'
-}
-//----------TMP----------//
+//-----------------------//
 
-//----------  ----------//
+//----------Main Function----------//
 /**
  * Find data by ranking
  * @param {object} event 
@@ -89,7 +82,7 @@ function findByRank(event = {}, id = 0) {
     const mainData = baseData['edges'][id]['node'];
     return mainData
 }
-//----------  ----------//
+//---------------------------------//
 
 //----------MAIN PROCESS----------//
 // Create Server
@@ -108,14 +101,19 @@ app.on('ready', function () {
     shortcut('ctrl+p');
     shortcut('ctrl+enter');
     shortcut('shift+enter');
-
-    ipcMain.handle('findByRank', findByRank);
-    ipcMain.handle('python_start', python_ctrl);
-    // Socket.io
-    socket.on('connect', function (data) { console.log('[Socket.io] Connected to Python Server'); });
-    ipcMain.handle('python_start_request', function (event, value) { socket.emit('python_start_request', value); return log('Request accepted', 'nodejs') });
-    socket.on('python_start_request', function (value) { window.webContents.send('python_start_request', value); });
 });
 
 // finish
 app.on('window-all-closed', function () { if (process.platform !== 'darwin') { app.quit(); } });
+//--------------------------------//
+
+//----------ipcMain Event----------//
+ipcMain.handle('findByRank', findByRank);
+ipcMain.handle('python_StartEdit', function (event, value) { socket.emit('StartEdit', value); return logger('Request Accepted.', 'nodejs') });
+//---------------------------------//
+
+//----------Socket.io Event----------//
+socket.on('python_logger', function (value) { logger(value, 'python'); });
+socket.on('connect', function (value) { logger('Connected to Python Server.', 'nodejs', 'socket.io-client'); });
+socket.on('python_StartEdit', function (value) { window.webContents.send('python_StartEdit', value); });
+//-----------------------------------//
