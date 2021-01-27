@@ -2,7 +2,7 @@ const { ipcRenderer, Main, shell } = require('electron');
 const io = require('socket.io-client');
 const socket = io('ws://localhost:8256');
 // define client to server
-socket.emit('define_client', 'web_client');
+socket.emit('define_client', 'web');
 
 // グローバル変数の定義
 // 変数の変更イベントの管理
