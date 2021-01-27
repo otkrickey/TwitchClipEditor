@@ -37,7 +37,7 @@ def connect(sid: str, environ):
 @sio.event
 def define_client(sid: str, value):
     client_sid[value] = sid
-    logger('%s: %s' % (value, sid), ['python', 'define_client'])
+    logger(json.dumps(client_sid), ['python', 'sid'])
 
 
 @sio.event
@@ -50,8 +50,8 @@ def StartEdit(sid: str, value):
 @sio.event
 def disconnect(sid):
     client_sid.pop([k for k, v in client_sid.items() if v == sid][0])
-    print("[python][sid] => " + json.dumps(client_sid))
-    print('disconnect ', sid)
+    logger('Disconnected: %s' % sid, ['python'])
+    logger(json.dumps(client_sid), ['python', 'sid'])
 
 
 if __name__ == '__main__':
