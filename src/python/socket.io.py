@@ -7,21 +7,21 @@ app = socketio.WSGIApp(sio, static_files={
     '/socket.io.js': 'C:/Users/rtkfi/OneDrive/デスクトップ/TwitchClipEditor/src/javascript/socket.io.js',
 })
 
-client_sid: dict[str] = {'node': None, 'web': None, }
+client_sid: dict[str] = {'nodejs': None, 'web': None, }
 
 
-def log(sid: str, value: str, *args: str, ):
+def logger(client: str, value: str, *args: str):
     _ = ''.join(['[%s]' % s for s in args])
-    sio.emit('python_logger', value, room=sid)
+    sio.emit('python_logger', value, room=client_sid[client])
     print(_)
     return _
 
 
 def exe_edit(value: int) -> None:
-    log(client_sid['node'], 'Server Opened', 'python', 'logger')
+    logger('nodejs', 'Server Opened', 'python', 'logger')
     for i in range(value):
         sio.emit('python_executing', i, room=client_sid['web'])
-    log(client_sid['node'], 'Server Opened', 'python', 'logger')
+    logger('nodejs', 'Server Opened', 'python', 'logger')
 
 
 @sio.event
@@ -37,7 +37,7 @@ def define_client(sid: str, value):
 
 
 @sio.event
-def python_start_request(sid: str, value):
+def StartEdit(sid: str, value):
     print('[python][ctrl] => `Request accepted.`')
     sio.emit('python_start_request', '[python][ctrl] => `Request accepted.`', room=client_sid['nodejs'])
     exe_edit(value)
