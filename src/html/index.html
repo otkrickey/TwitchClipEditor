@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Application</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/color.css">
+    <link rel="stylesheet" href="../css/default.css">
+    <link rel="stylesheet" href="../css/encoded.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/socket.io.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left-top">
+            <div id="video-controller"></div>
+            <video id="video" src="../media/video.mp4" muted controls></video>
+        </div>
+        <div class="left-bottom">
+            <div id="info"></div>
+        </div>
+        <div class="right">
+            <form name="twitch" onsubmit="return false">
+                <input id="ranking" type="number"><button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+            <button id="previous">previous</button>
+            <button id="next">Next</button>
+            <div class="python">
+                <div id="progress"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/index.js"></script>
+</body>
+
+</html>
