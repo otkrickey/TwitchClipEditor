@@ -68,10 +68,11 @@ function initShortcut(keys) {
 //----------TMP----------//
 /**
  * Logger
- * @param {string} value log
- * @param  {...string} args logger name
+ * @param {string} value Main Log
+ * @param  {Array<number>} args ['arg', 'arg']
+ * @returns {string} '[arg][arg] value'
  */
-function logger(value, ...args) {
+function logger(value, args) {
     const _ = (function (args) { let str = ''; args.forEach(function (e) { str += `[${e}]` }); return str })(args) + ' ' + String(value);
     console.log(_);
     return _
@@ -81,8 +82,9 @@ function logger(value, ...args) {
 //----------Main Function----------//
 /**
  * Find data by ranking
- * @param {object} event { }
- * @param {number} id 0
+ * @param {object} event default value : { }
+ * @param {number} id default value : 0
+ * @returns {object} { ... }
  */
 function findByRank(event = {}, id = 0) {
     const baseData = JSON.parse(fs.readFileSync('src/json/twitch.json', 'utf8'));
@@ -93,7 +95,7 @@ function findByRank(event = {}, id = 0) {
 
 //----------ipcMain----------//
 ipcMain.handle('findByRank', findByRank);
-ipcMain.handle('python_StartEdit', function (event, value) { socket.emit('StartEdit', value); return logger('Request Accepted.', 'nodejs') });
+ipcMain.handle('python_StartEdit', function (event, value) { socket.emit('StartEdit', value); return logger('Request Accepted.', ['nodejs']) });
 //---------------------------------//
 
 //----------Socket.io----------//
@@ -105,8 +107,8 @@ const server = new PythonShell('src/python/socket.io.py', { args: ['-p', port] }
 const socket = io.connect(`ws://localhost:${port}`);
 // Register client to Server
 socket.emit('define_client', 'nodejs');
-socket.on('python_logger', function (value) { logger(value, 'python', 'socket.io-server'); });
-socket.on('connect', function (value) { logger('Connected.', 'nodejs', 'socket.io-client'); });
+socket.on('python_logger', function (value) { logger(value, ['python', 'socket.io-server']); });
+socket.on('connect', function (value) { logger('Connected.', ['nodejs', 'socket.io-client']); });
 socket.on('python_StartEdit', function (value) { window.webContents.send('python_StartEdit', value); });
 //-----------------------------------//
 
