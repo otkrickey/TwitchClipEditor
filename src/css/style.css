@@ -1,0 +1,37 @@
+form[name="twitch"]{
+    display: flex;
+
+    max-width: 300px;
+    margin: 0.5rem;
+
+    border-radius: var(--border-radius-medium);
+    background-color: var(--color-background-input);
+}
+form[name="twitch"] input[type="number"]{
+    flex: auto;
+
+    border-radius: none;
+    border-top-left-radius: var(--border-radius-medium);
+    border-bottom-left-radius: var(--border-radius-medium);
+    background-color: transparent;
+}
+div#video-controller{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+div.python{
+    width: 100%;
+    display: block;
+
+    height: 10px;
+    background-color: var(--color-twitter);
+}
+div#progress{
+    display: block;
+    background-color: var(--color-youtube);
+    height: 100%;
+    width: 0;
+}
