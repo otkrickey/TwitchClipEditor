@@ -48,19 +48,26 @@ function initWindowMenu() {
     Menu.setApplicationMenu(menu);
 }
 /**
- * Define Shortcut (if executed, send its data to Window.)
- * @param {string} key 
+ * Initialize Shortcut Event Handler
+ * @param {Array[string]} keys ['ctrl-v', 'ctrl-s']
  */
-function shortcut(key) {
-    globalShortcut.register(key, function () {
-        window.webContents.send(key, true);
-    });
+function initShortcut(keys) {
+    /**
+     * Create Shortcut Event Handler
+     * @param {string} key 'ctrl-v'
+     */
+    function shortcut(key) {
+        globalShortcut.register(key, function () {
+            window.webContents.send(key, null);
+        });
+    }
+    keys.forEach(function (key) { shortcut(key); });
 }
 //----------------------------//
 
 //----------TMP----------//
 /**
- * 
+ * Logger
  * @param {string} value log
  * @param  {...string} args logger name
  */
@@ -74,8 +81,8 @@ function logger(value, ...args) {
 //----------Main Function----------//
 /**
  * Find data by ranking
- * @param {object} event 
- * @param {number} id 
+ * @param {object} event { }
+ * @param {number} id 0
  */
 function findByRank(event = {}, id = 0) {
     const baseData = JSON.parse(fs.readFileSync('src/json/twitch.json', 'utf8'));
@@ -84,36 +91,33 @@ function findByRank(event = {}, id = 0) {
 }
 //---------------------------------//
 
-//----------MAIN PROCESS----------//
+//----------ipcMain----------//
+ipcMain.handle('findByRank', findByRank);
+ipcMain.handle('python_StartEdit', function (event, value) { socket.emit('StartEdit', value); return logger('Request Accepted.', 'nodejs') });
+//---------------------------------//
+
+//----------Socket.io----------//
+
 // Create Server
-const server = new PythonShell('src/python/socket.io.py');
+const port = 8080;
+const server = new PythonShell('src/python/socket.io.py', { args: ['-p', port] });
 // Connect to Server
-const socket = io.connect('ws://localhost:8256');
+const socket = io.connect(`ws://localhost:${port}`);
 // Register client to Server
 socket.emit('define_client', 'nodejs');
+socket.on('python_logger', function (value) { logger(value, 'python', 'socket.io-server'); });
+socket.on('connect', function (value) { logger('Connected.', 'nodejs', 'socket.io-client'); });
+socket.on('python_StartEdit', function (value) { window.webContents.send('python_StartEdit', value); });
+//-----------------------------------//
 
+//----------MAIN PROCESS----------//
 // start
 app.on('ready', function () {
     createWindow();
     initWindowMenu();
-
-    shortcut('ctrl+n');
-    shortcut('ctrl+p');
-    shortcut('ctrl+enter');
-    shortcut('shift+enter');
+    initShortcut(['ctrl+n', 'ctrl+p', 'ctrl+enter', 'shift+enter']);
 });
 
 // finish
 app.on('window-all-closed', function () { if (process.platform !== 'darwin') { app.quit(); } });
 //--------------------------------//
-
-//----------ipcMain Event----------//
-ipcMain.handle('findByRank', findByRank);
-ipcMain.handle('python_StartEdit', function (event, value) { socket.emit('StartEdit', value); return logger('Request Accepted.', 'nodejs') });
-//---------------------------------//
-
-//----------Socket.io Event----------//
-socket.on('python_logger', function (value) { logger(value, 'python'); });
-socket.on('connect', function (value) { logger('Connected to Python Server.', 'nodejs', 'socket.io-client'); });
-socket.on('python_StartEdit', function (value) { window.webContents.send('python_StartEdit', value); });
-//-----------------------------------//
