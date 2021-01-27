@@ -104,5 +104,6 @@ dist
 .tern-port
 
 # Self Added
-test
+test.js
+test.py
 test/
