@@ -93,10 +93,7 @@ function findByRank(event = {}, id = 0) {
 
 //----------MAIN PROCESS----------//
 // Create Server
-const server = new PythonShell('src/python/test.py');
-// const server = new PythonShell('src/python/socket.io.py');
-// Server logger
-server.on('message', function (value) { console.log(value, 'python'); });
+const server = new PythonShell('src/python/socket.io.py');
 // Connect to Server
 const socket = io.connect('ws://localhost:8256');
 // Register client to Server
