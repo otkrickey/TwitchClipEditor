@@ -61,16 +61,10 @@ function shortcut(key) {
 
 
 //----------TMP----------//
-/**
- * tmp function for debug
- * @param {*} value any
- * @returns {*} any
- */
-function log(value) {
-    function python(value) {
-        console.log(`[PythonShell][OutPut] ${value}`);
-        return value
-    }
+function log(value, ...args) {
+    const _ = (function (args) { let str = ''; args.forEach(function (e) { str += `[${e}]` }); return str })(args) + ' ' + String(value);
+    console.log(_);
+    return _
 }
 /**
  * tem function for test
@@ -91,23 +85,22 @@ function python_ctrl(event, file) {
  * @param {number} id 
  */
 function findByRank(event = {}, id = 0) {
-    const baseData = JSON.parse(fs.readFileSync('./twitch.json', 'utf8'));
+    const baseData = JSON.parse(fs.readFileSync('src/json/twitch.json', 'utf8'));
     const mainData = baseData['edges'][id]['node'];
     return mainData
 }
 //----------  ----------//
 
 //----------MAIN PROCESS----------//
-
-// create Python-socket.io-server
+// Create Server
 const server = new PythonShell('src/python/test.py');
-server.on('message', function (value) {
-    log.python()
-})
-
-// Connect to Socket.io Server
+// const server = new PythonShell('src/python/socket.io.py');
+// Server logger
+server.on('message', function (value) { console.log(value, 'python'); });
+// Connect to Server
 const socket = io.connect('ws://localhost:8256');
-socket.emit('define_client', 'nodejs_client')
+// Register client to Server
+socket.emit('define_client', 'nodejs');
 
 // start
 app.on('ready', function () {
@@ -118,11 +111,12 @@ app.on('ready', function () {
     shortcut('ctrl+p');
     shortcut('ctrl+enter');
     shortcut('shift+enter');
+
     ipcMain.handle('findByRank', findByRank);
     ipcMain.handle('python_start', python_ctrl);
     // Socket.io
     socket.on('connect', function (data) { console.log('[Socket.io] Connected to Python Server'); });
-    ipcMain.handle('python_start_request', function (event, value) { socket.emit('python_start_request', value); return log('[Nodejs][python-controller] => `Request accepted.`') });
+    ipcMain.handle('python_start_request', function (event, value) { socket.emit('python_start_request', value); return log('Request accepted', 'nodejs') });
     socket.on('python_start_request', function (value) { window.webContents.send('python_start_request', value); });
 });
 
