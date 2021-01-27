@@ -1,33 +1,39 @@
-import eventlet
-import socketio
+import argparse
 import json
 
+import eventlet
+import socketio
+
+# Check Arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('-p', '--port', help='Server Port')
+args = parser.parse_args()
+
+# Create Server
 sio = socketio.Server()
-app = socketio.WSGIApp(sio, static_files={
-    '/socket.io.js': 'C:/Users/rtkfi/OneDrive/デスクトップ/TwitchClipEditor/src/javascript/socket.io.js',
-})
+app = socketio.WSGIApp(sio)
 
-client_sid: dict[str] = {'nodejs': None, 'web': None, }
+# define client-name and client-id
+client_sid: dict[str] = {'nodejs': None, 'chrome': None}
 
 
-def logger(client: str, value: str, *args: str):
+def logger(sid: str, value: str, *args: str):
     _ = ''.join(['[%s]' % s for s in args])
-    sio.emit('python_logger', value, room=client_sid[client])
+    sio.emit('python_logger', value, room=sid)
     print(_)
     return _
 
 
 def exe_edit(value: int) -> None:
-    logger('nodejs', 'Server Opened', 'python', 'logger')
+    logger(client_sid['nodejs'], 'Server Opened', 'python', 'logger')
     for i in range(value):
-        sio.emit('python_executing', i, room=client_sid['web'])
-    logger('nodejs', 'Server Opened', 'python', 'logger')
+        sio.emit('python_executing', i, room=client_sid['chrome'])
+    logger(client_sid['nodejs'], 'Server Opened', 'python', 'logger')
 
 
 @sio.event
 def connect(sid: str, environ):
-    sio.emit('python_logger', 'connected to %s' % sid, room=sid)
-    print('connect ', sid)
+    logger(sid, 'Connected. sid = %s' % sid, 'python')
 
 
 @sio.event
@@ -51,4 +57,4 @@ def disconnect(sid):
 
 
 if __name__ == '__main__':
-    eventlet.wsgi.server(eventlet.listen(('localhost', 8256)), app)
+    eventlet.wsgi.server(eventlet.listen(('localhost', int(args.port))), app)
