@@ -2,16 +2,15 @@
 const { app, BrowserWindow, Menu, ipcMain, globalShortcut } = require('electron');
 // FileSystem
 const fs = require('fs');
+// PythonShell
+const { PythonShell } = require('python-shell');
 // Socket.io Client
 const io = require('socket.io-client');
-// Connect to Socket.io Server
-const socket = io.connect('ws://localhost:8256');
-socket.emit('define_client', 'nodejs_client')
 
 
+//----------Electron----------//
 // Electron Window
 let window;
-
 /**
  *Create Electron Window (if Electron-App is ready)
  */
@@ -29,10 +28,9 @@ function createWindow() {
             nodeIntegration: true
         }
     });
-    window.loadFile('app/html/index.html');
+    window.loadFile('src/html/index.html');
     window.webContents.openDevTools();
 }
-
 /**
  * Initialize Window Menu (if Electron-App is ready)
  */
@@ -50,13 +48,30 @@ function initWindowMenu() {
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
 }
+/**
+ * Define Shortcut (if executed, send its data to Window.)
+ * @param {string} key 
+ */
+function shortcut(key) {
+    globalShortcut.register(key, function () {
+        window.webContents.send(key, true);
+    });
+}
+//----------Electron----------//
 
+
+//----------TMP----------//
 /**
  * tmp function for debug
  * @param {*} value any
  * @returns {*} any
  */
-function log(value) { console.log(value); return value }
+function log(value) {
+    function python(value) {
+        console.log(`[PythonShell][OutPut] ${value}`);
+        return value
+    }
+}
 /**
  * tem function for test
  * @param {object} event
@@ -67,16 +82,9 @@ function python_ctrl(event, file) {
     socket.emit('first', 'hello', function () { });
     return 'started'
 }
+//----------TMP----------//
 
-/**
- * Define Shortcut (if executed, send its data to Window.)
- * @param {string} key 
- */
-function shortcut(key) {
-    globalShortcut.register(key, function () {
-        window.webContents.send(key, true);
-    });
-}
+//----------  ----------//
 /**
  * Find data by ranking
  * @param {object} event 
@@ -87,8 +95,21 @@ function findByRank(event = {}, id = 0) {
     const mainData = baseData['edges'][id]['node'];
     return mainData
 }
+//----------  ----------//
 
-// Electron App
+//----------MAIN PROCESS----------//
+
+// create Python-socket.io-server
+const server = new PythonShell('src/python/test.py');
+server.on('message', function (value) {
+    log.python()
+})
+
+// Connect to Socket.io Server
+const socket = io.connect('ws://localhost:8256');
+socket.emit('define_client', 'nodejs_client')
+
+// start
 app.on('ready', function () {
     createWindow();
     initWindowMenu();
@@ -105,5 +126,5 @@ app.on('ready', function () {
     socket.on('python_start_request', function (value) { window.webContents.send('python_start_request', value); });
 });
 
-// Finish
+// finish
 app.on('window-all-closed', function () { if (process.platform !== 'darwin') { app.quit(); } });
