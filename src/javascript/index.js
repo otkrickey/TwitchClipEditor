@@ -177,7 +177,6 @@ ipcRenderer.on('nodejs_logger', function (event, value) { console.log(value); })
 //----------Socket.io----------//
 // Connect to Server
 const socket = io(`ws://localhost:8080`);
-
 // Register client to Server
 socket.emit('define_client', 'chrome');
 socket.on('connect', function (value) { ipcRenderer.invoke('chrome_connected', 'chrome'); });
