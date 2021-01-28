@@ -22,4 +22,3 @@ class Image:
                     int(self.spy if self.spy == self.epy else Easing((t - self.st) / (self.et - self.st)).easeInOutBack * (self.epy - self.spy) + self.spy))
         else:
             return (self.epx, self.epy)
-
