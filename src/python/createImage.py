@@ -13,10 +13,13 @@ class Rect:
     ----------
     canvas : np.ndarray
         画像を作成するキャンバス
+
     size : Tuple[int, int]
         作成する画像のサイズ
+
     color : Tuple[int, int, int]
         作成する画像の色
+
     r : Union[int, float]
         角の丸み (0をしてすると直角)
     """
@@ -29,8 +32,10 @@ class Rect:
         ----------
         size : Tuple[int, int]
             作成する画像のサイズ
+
         color : Tuple[int, int, int]
             作成する画像の色
+
         r : Union[int, float]
             角の丸み (0をしてすると直角)
         """
@@ -63,12 +68,16 @@ class Text:
     ----------
     canvas : np.ndarray
         画像を作成するキャンバス
+
     size : Tuple[int, int]
         作成する画像のサイズ
+
     color : Tuple[int, int, int]
         作成する画像の色
+
     content : str
         入力する文字
+
     fontsize : Union[int, float]
         入力する文字サイズ
     """
@@ -81,10 +90,13 @@ class Text:
         ----------
         size : Tuple[int, int]
             作成する画像のサイズ
+
         color : Tuple[int, int, int]
             作成する画像の色
+
         content : str
             入力する文字
+
         fontsize : Union[int, float]
             入力する文字サイズ
         """
