@@ -107,3 +107,5 @@ dist
 test.js
 test.py
 test/
+
+.vscode/
