@@ -56,7 +56,38 @@ class Rect:
 
 
 class Text:
+    """
+    文字の画像の作成・出力
+
+    Attributes
+    ----------
+    canvas : np.ndarray
+        画像を作成するキャンバス
+    size : Tuple[int, int]
+        作成する画像のサイズ
+    color : Tuple[int, int, int]
+        作成する画像の色
+    content : str
+        入力する文字
+    fontsize : Union[int, float]
+        入力する文字サイズ
+    """
+
     def __init__(self, size: Tuple[int, int], color: Tuple[int, int, int], content: str, fontsize: Union[int, float]) -> None:
+        """
+        文字の画像の作成
+
+        Parameters
+        ----------
+        size : Tuple[int, int]
+            作成する画像のサイズ
+        color : Tuple[int, int, int]
+            作成する画像の色
+        content : str
+            入力する文字
+        fontsize : Union[int, float]
+            入力する文字サイズ
+        """
         self.canvas = np.full((size[1], size[0], 4), 0, dtype=np.uint8)
         PIL_Image = Image.fromarray(self.canvas[..., :3])
         draw = ImageDraw.Draw(PIL_Image)
