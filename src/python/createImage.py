@@ -24,7 +24,7 @@ class Rect:
         角の丸み (0をしてすると直角)
     """
 
-    def __init__(self, size: Tuple[int, int], color: Tuple[int, int, int], r: Union[int, float]) -> None:
+    def __init__(self, size: Tuple[int, int], color: Tuple[int, int, int], radius: Union[int, float]) -> None:
         """
         長方形の画像の作成
 
@@ -43,8 +43,8 @@ class Rect:
         self.size = size
         self.color = color
         self.canvas: np.ndarray = np.full((size[1], size[0], 4), 0, dtype=np.uint8)
-        cv2.rectangle(self.canvas, (r, r), (self.size[0] - r, self.size[1] - r), self.color, -1, cv2.LINE_AA)
-        cv2.rectangle(self.canvas, (r, r), (self.size[0] - r, self.size[1] - r), self.color, r * 2, cv2.LINE_AA)
+        cv2.rectangle(self.canvas, (radius, radius), (self.size[0] - radius, self.size[1] - radius), self.color, -1, cv2.LINE_AA)
+        cv2.rectangle(self.canvas, (radius, radius), (self.size[0] - radius, self.size[1] - radius), self.color, radius * 2, cv2.LINE_AA)
         self.canvas[..., 3] = self.canvas[..., :3].sum(axis=2) / sum(self.color) * 255
 
     @property
@@ -78,11 +78,11 @@ class Text:
     content : str
         入力する文字
 
-    fontsize : Union[int, float]
+    fontsize : Union[int, float] = 36
         入力する文字サイズ
     """
 
-    def __init__(self, size: Tuple[int, int], color: Tuple[int, int, int], content: str, fontsize: Union[int, float]) -> None:
+    def __init__(self, size: Tuple[int, int], color: Tuple[int, int, int], content: str, fontsize: Union[int, float] = 36) -> None:
         """
         文字の画像の作成
 
