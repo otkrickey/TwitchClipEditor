@@ -6,7 +6,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from PIL import Image, ImageDraw, ImageFont
 
-# from createImage import Rect, Text
 from easing import Easing
 
 
