@@ -110,4 +110,5 @@ test/
 
 .vscode/
 
-*.ig*
+*.ig.*
+*.ig/
