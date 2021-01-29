@@ -109,3 +109,5 @@ test.py
 test/
 
 .vscode/
+
+*.ig.*
