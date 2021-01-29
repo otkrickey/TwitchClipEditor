@@ -17,14 +17,14 @@ class Image:
         self.epx = end_position[0]
         self.epy = end_position[1]
 
-    def position(self, t) -> Tuple[int, int]:
+    def position(self, t) -> Tuple[np.ndarray, Tuple[int, int]]:
         if t < self.st:
-            return (self.spx, self.spy)
+            return (self.image, (self.spx, self.spy))
         elif self.st <= t < self.et:
-            return (int(self.spx if self.spx == self.epx else Easing((t - self.st) / (self.et - self.st)).easeInOutBack * (self.epx - self.spx) + self.spx),
-                    int(self.spy if self.spy == self.epy else Easing((t - self.st) / (self.et - self.st)).easeInOutBack * (self.epy - self.spy) + self.spy))
+            return (self.image, (int(self.spx if self.spx == self.epx else Easing((t - self.st) / (self.et - self.st)).easeInOutBack * (self.epx - self.spx) + self.spx),
+                                 int(self.spy if self.spy == self.epy else Easing((t - self.st) / (self.et - self.st)).easeInOutBack * (self.epy - self.spy) + self.spy)))
         else:
-            return (self.epx, self.epy)
+            return (self.image, (self.epx, self.epy))
 
 
 def mask(back: np.ndarray, front: np.ndarray, position: Tuple[int, int]) -> np.ndarray:
