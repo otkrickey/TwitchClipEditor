@@ -112,4 +112,7 @@ test/
 
 *.ig.*
 *.ig/
+
+__pycache__/
+
 clip-*.mp4
