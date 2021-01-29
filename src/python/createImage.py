@@ -103,15 +103,14 @@ class Text:
         self.canvas = np.full((size[1], size[0], 4), 0, dtype=np.uint8)
         PIL_Image = Image.fromarray(self.canvas[..., :3])
         draw = ImageDraw.Draw(PIL_Image)
-        font = ImageFont.truetype(".fonts/MPLUSRounded1c-Medium.ttf", fontsize)
+        font = ImageFont.truetype("src/fonts/MPLUSRounded1c-Medium.ttf", fontsize)
         textsize = draw.textsize(content, font=font)
         font_offset = font.getoffset(content)
-        px = (self.s[0] - textsize[0] - font_offset[0]) / 2
-        py = (self.s[1] - textsize[1] - font_offset[1]) / 2
+        px = (size[0] - textsize[0] - font_offset[0]) / 2
+        py = (size[1] - textsize[1] - font_offset[1]) / 2
         draw.text((px, py), content, color, font)
         self.canvas[..., :3] = np.array(PIL_Image, dtype=np.uint8)
         self.canvas[..., 3] = self.canvas[..., :3].sum(axis=2) / sum(color) * 255
-        return self
 
     @property
     def image(self) -> np.ndarray:
