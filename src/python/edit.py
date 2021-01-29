@@ -4,8 +4,8 @@ from typing import Tuple, Union
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
-from src.python.createImage import Rect, Text
-from src.python.easing import Easing
+from createImage import Rect, Text
+from easing import Easing
 
 
 class Image:
@@ -29,7 +29,7 @@ class Image:
 
 
 def mask(back: np.ndarray, front: np.ndarray, position: tuple) -> np.ndarray:
-    '''
+    """
     `back`に指定された画像に`front`に指定した画像を`position`で指定した位置に合成する。
 
     Parameters
@@ -46,7 +46,7 @@ def mask(back: np.ndarray, front: np.ndarray, position: tuple) -> np.ndarray:
     -------
     back : np.ndarray
         合成後の背景画像。
-    '''
+    """
     px, py = position
     fh: int = front.shape[0]
     fw: int = front.shape[1]
@@ -71,52 +71,20 @@ def mask(back: np.ndarray, front: np.ndarray, position: tuple) -> np.ndarray:
     return back
 
 
-class Edit:
-    def __init__(self, clip_id: int, textContent: str, FILE_PATH: str) -> None:
-        filename = f'clip-{clip_id}.mp4'
-        self.filename = filename
-        self.FILE_PATH = FILE_PATH
-        self.InputVideo = cv2.VideoCapture(f'{FILE_PATH}download/{self.filename}')
-        self.OutPutVIdeo = cv2.VideoWriter(f'{FILE_PATH}export/{self.filename}', cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), 60, (1920, 1080))
-        self.FrameCount = int(self.InputVideo.get(cv2.CAP_PROP_FRAME_COUNT))
-        # call 3 images here
-        self.Rect1 = Rect((360, 120), (197, 22, 92), radius=8).image
-        self.Rect2 = Rect((360, 10), (255, 255, 255), radius=5).image
-        self.Text3 = Text((360, 120), (255, 255, 255), textContent).image
-        self.FrontImage1 = Image(self.Rect1, (0, 60), (-340, 60), (20, 60))
-        self.FrontImage2 = Image(self.Rect2, (15, 75), (-340, 170), (20, 170))
-        self.FrontImage3 = Image(self.Text3, (30, 90), (-340, 60), (20, 60))
-
-    def edit(self):
-        for i in range(self.FrameCount):
-            flag, frame = self.InputVideo.read()
-            if not flag: break
-            frame = mask(frame, *self.FrontImage1.position(i))
-            frame = mask(frame, *self.FrontImage2.position(i))
-            frame = mask(frame, *self.FrontImage3.position(i))
-            self.OutPutVIdeo.write(frame)
-            if i % 100 == 0: print(i)
-        self.InputVideo.release()
-        self.OutPutVIdeo.release()
-        subprocess.call(
-            f'ffmpeg -i {self.FILE_PATH}export/{self.filename} -i {self.FILE_PATH}download/{self.filename} -c:v copy {self.FILE_PATH}{self.filename} -loglevel quiet -y'
-        )
-
-
 FILE_PATH = 'src/video/'
 
 
-def edit(self, clip_id: int, textContent: str) -> None:
+def edit(clip_id: int, textContent: str) -> None:
     filename = f'clip-{clip_id}.mp4'
     INPUT_VIDEO = cv2.VideoCapture(f'{FILE_PATH}download/{filename}')
-    OUTPUT_VIDEO = cv2.VideoCapture(f'{FILE_PATH}export/{filename}', cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), 60, (1920, 1080))
+    OUTPUT_VIDEO = cv2.VideoWriter(f'{FILE_PATH}export/{filename}', cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), 60, (1920, 1080))
     FrameCount = int(INPUT_VIDEO.get(cv2.CAP_PROP_FRAME_COUNT))
     RectImage1 = Rect((360, 120), (197, 22, 92), radius=8).image
     RectImage2 = Rect((360, 10), (255, 255, 255), radius=5).image
     TextImage3 = Text((360, 120), (255, 255, 255), textContent).image
-    FrontImage1 = Image(self.Rect1, (0, 60), (-340, 60), (20, 60))
-    FrontImage2 = Image(self.Rect2, (15, 75), (-340, 170), (20, 170))
-    FrontImage3 = Image(self.Text3, (30, 90), (-340, 60), (20, 60))
+    FrontImage1 = Image(RectImage1, (0, 60), (-340, 60), (20, 60))
+    FrontImage2 = Image(RectImage2, (15, 75), (-340, 170), (20, 170))
+    FrontImage3 = Image(TextImage3, (30, 90), (-340, 60), (20, 60))
     for i in range(FrameCount):
         flag, frame = INPUT_VIDEO.read()
         if not flag: break
@@ -130,7 +98,7 @@ def edit(self, clip_id: int, textContent: str) -> None:
 
 
 def main():
-    Edit(991466429, 'Streamer Name', 'src/video/').edit()
+    edit(991466429, 'Streamer Name')
     pass
 
 
