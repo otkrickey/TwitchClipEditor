@@ -224,8 +224,34 @@ def mask(back: np.ndarray, front: np.ndarray, position: tuple[int, int]) -> np.n
 FILE_PATH = 'src/video/'
 
 
-def edit(clip_id: int, textContent: str) -> None:
-    filename = f'clip-{clip_id}.mp4'
+def edit(clip: int, textContent: str) -> None:
+    """
+    Edit Video
+    --------------------------------
+
+    Parameters:
+
+               clip: int  - Twitch Clip ID
+        textContent: str  - Text to display
+
+    Returns:
+
+        None
+
+    Attribute:
+
+           filename: str         - Video File Name
+        INPUT VIDEO: Video       - Input Video (Downloaded Video)
+        INPUT VIDEO: Video       - Input Video (Export Video)
+         FrameCount: int         - Input Video Frame Count
+         RectImage1: np.ndarray  - BackGroundImage
+         RectImage2: np.ndarray  - UnderLineImage
+         TextImage3: np.ndarray  - FrontText
+        FrontImage1: tuple(np.ndarray, tuple(int, int))  - Position of RectImage1
+        FrontImage2: tuple(np.ndarray, tuple(int, int))  - Position of RectImage2
+        FrontImage3: tuple(np.ndarray, tuple(int, int))  - Position of TextImage3
+    """
+    filename = f'clip-{clip}.mp4'
     INPUT_VIDEO = cv2.VideoCapture(f'{FILE_PATH}download/{filename}')
     OUTPUT_VIDEO = cv2.VideoWriter(f'{FILE_PATH}export/{filename}', cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), 60, (1920, 1080))
     FrameCount = int(INPUT_VIDEO.get(cv2.CAP_PROP_FRAME_COUNT))
