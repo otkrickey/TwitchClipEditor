@@ -223,7 +223,7 @@ def mask(back: np.ndarray, front: np.ndarray, position: tuple[int, int]) -> np.n
 FILE_PATH = 'src/video/'
 
 
-def edit(clip: int, textContent: str) -> None:
+def Edit(clip: int, textContent: str) -> None:
     """
     Edit Video
     --------------------------------
@@ -273,7 +273,7 @@ def edit(clip: int, textContent: str) -> None:
 
 
 def main():
-    edit(991466429, 'Streamer Name')
+    Edit(991466429, 'Streamer Name')
     pass
 
 
