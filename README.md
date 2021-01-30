@@ -2,27 +2,35 @@
 
 description
 
-# Requirement
-
-## Javascript
-
-* module
-* module
-
-## Python
-
-* `eventlet`
-* `socketio`
-* `cv2`
-* `numpy`
-* `matplotlib`
-* `PIL`
-
 # Installation
 
 ```bash
 git clone https://github.com/otkrickey/TwitchClipEditor.git
+```
+
+# Requirement
+
+## Javascript (Node.js)
+
+* `Electron`
+* `python-shell`
+* `socket.io-client`
+
+```bash
 npm install
+```
+
+## Python3
+
+* `cv2`
+* `PIL`
+* `numpy`
+* `eventlet`
+* `socketio`
+* `matplotlib`
+
+```bash
+pip install
 ```
 
 # Usage
