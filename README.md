@@ -10,7 +10,7 @@ git clone https://github.com/otkrickey/TwitchClipEditor.git
 
 # Requirement
 
-## Javascript (Node.js)
+## Node.js
 
 * `Electron`
 * `python-shell`
@@ -47,13 +47,12 @@ note
 
 # Author
 
-Author
-
-* 作成者
-* 所属
-* E-mail
+* otkrickey
+* [Twitter @otkrickey](https://twitter.com/otkrickey)
+* [Qiita @otkrickey](https://qiita.com/otkrickey)
+* rtk.otk@gmail.com
 
 # License
 
-license description
-[MIT license](https://en.wikipedia.org/wiki/MIT_License).
+The source code is licensed [MIT](https://opensource.org/licenses/mit-license.php).
+<!-- The website content is licensed CC BY 4.0,see LICENSE. -->
