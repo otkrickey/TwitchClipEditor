@@ -11,8 +11,12 @@ description
 
 ## Python
 
-* module
-* module
+* `eventlet`
+* `socketio`
+* `cv2`
+* `numpy`
+* `matplotlib`
+* `PIL`
 
 # Installation
 
