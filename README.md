@@ -35,15 +35,11 @@ pip install -r requirements.txt
 
 # Usage
 
-description
+Open App
 
 ```bash
 npm start
 ```
-
-# Note
-
-note
 
 # Author
 
