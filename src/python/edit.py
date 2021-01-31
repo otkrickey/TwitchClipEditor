@@ -392,8 +392,12 @@ def Edit(clip: int, textContent: str, callback: callable(int)) -> None:
     subprocess.call(f'ffmpeg -i {FILE_PATH}export/{filename} -i {FILE_PATH}download/{filename} -c:v copy {FILE_PATH}{filename} -loglevel quiet -y')
 
 
+def lg(i: int) -> None:
+    if i % 100 == 0: print(i)
+
+
 def main():
-    Edit(991466429, 'Streamer Name')
+    Edit(991466429, 'Streamer Name', lg)
     pass
 
 
