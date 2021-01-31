@@ -1,3 +1,4 @@
+const PORT = 8080;
 // Electron
 const { app, BrowserWindow, Menu, ipcMain, globalShortcut, ipcRenderer } = require('electron');
 // FileSystem
@@ -5,11 +6,10 @@ const fs = require('fs');
 // PythonShell
 const { PythonShell } = require('python-shell');
 // socket.io-Server
-var fs = require('fs');
-var http = require('http');
-var server = http.createServer();
+const { Server } = require('socket.io');
+const io = new Server(PORT);
 // Socket.io-Client
-const io = require('socket.io-client');
+// const io = require('socket.io-client');
 
 //----------Electron----------//
 // Electron Window
@@ -107,24 +107,39 @@ ipcMain.handle('python_StartEdit', function (event, value) { socket.emit('StartE
 ipcMain.handle('python_server_port', function (event, value) { return port });
 //---------------------------//
 
-//----------Socket.io----------//
+//----------Socket.io-Client----------//
 // Create Server
 // const server = new PythonShell('src/python/socket.io.py', { args: ['-p', 8080] });
 // Connect to Server
-const socket = io.connect(`ws://localhost:8080`);
+// const socket = io.connect(`ws://localhost:8080`);
 // Register client to Server
-socket.emit('define_client', 'nodejs');
-socket.on('python_logger', function (value) { logger(value, ['python', 'socket.io-server']); });
-socket.on('connect', function (value) { logger('Connected.', ['nodejs', 'socket.io-client']); });
-socket.on('python_StartEdit', function (value) { logger(value, ['python', 'socket.io-server']); });
-//-----------------------------//
+// socket.emit('define_client', 'nodejs');
+// socket.on('python_logger', function (value) { logger(value, ['python', 'socket.io-server']); });
+// socket.on('connect', function (value) { logger('Connected.', ['nodejs', 'socket.io-client']); });
+// socket.on('python_StartEdit', function (value) { logger(value, ['python', 'socket.io-server']); });
+//------------------------------------//
+
+//----------Socket.io-Client----------//
+const Clients = {};
+io.sockets.on("connection", function (socket) {
+    socket.on('define_client', function (value) {
+        Clients[value] = socket.id;
+        logger(`${value}: ${socket.id}`, ['nodejs', 'socket.io-server']);
+    });
+});
+//------------------------------------//
+
+//----------Python----------//
+const python = new PythonShell('src/python/io-client.py', { args: ['-p', PORT] });
+//--------------------------//
 
 //----------MAIN PROCESS----------//
 // start
 app.on('ready', function () {
     createWindow();
     initWindowMenu();
-    initShortcut(['ctrl+n', 'ctrl+p', 'ctrl+enter', 'shift+enter']);
+    // initShortcut(['ctrl+n', 'ctrl+p', 'ctrl+enter', 'shift+enter']);
+    initShortcut(['ctrl+n', 'ctrl+p', 'ctrl+enter']);
 });
 
 // finish
