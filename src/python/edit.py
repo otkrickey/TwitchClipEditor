@@ -329,7 +329,7 @@ def mask(back: np.ndarray, front: np.ndarray, position: tuple[int, int]) -> np.n
     if not ((-fw < px < bw) and (-fh < py < bh)): return back
     front3: np.ndarray = front[..., : 3]
     mask1: np.ndarray = front[..., 3]
-    mask3: np.ndarray = cv2.merge((mask1, mask1, mask1))
+    mask3: np.ndarray = 255 - cv2.merge((mask1, mask1, mask1))
     mask_roi: np.ndarray = mask3[sy - py: ey - py, sx - px: ex - px]
     front_roi: np.ndarray = front3[sy - py: ey - py, sx - px: ex - px]
     roi: np.ndarray = back[sy:ey, sx:ex]
