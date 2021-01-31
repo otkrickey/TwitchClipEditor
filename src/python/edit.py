@@ -339,10 +339,7 @@ def mask(back: np.ndarray, front: np.ndarray, position: tuple[int, int]) -> np.n
     return back
 
 
-FILE_PATH = 'src/video/'
-
-
-def Edit(clip: int, textContent: str, callback: callable = None) -> None:
+def Edit(PATH: str, clip: int, textContent: str, callback: callable = None) -> None:
     """
     Edit Video
     --------------------------------
@@ -371,8 +368,8 @@ def Edit(clip: int, textContent: str, callback: callable = None) -> None:
         FrontImage3: tuple(np.ndarray, tuple(int, int))  - Position of TextImage3
     """
     filename = f'clip-{clip}.mp4'
-    INPUT_VIDEO = cv2.VideoCapture(f'{FILE_PATH}download/{filename}')
-    OUTPUT_VIDEO = cv2.VideoWriter(f'{FILE_PATH}export/{filename}', cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), 60, (1920, 1080))
+    INPUT_VIDEO = cv2.VideoCapture(f'{PATH}download/{filename}')
+    OUTPUT_VIDEO = cv2.VideoWriter(f'{PATH}export/{filename}', cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), 60, (1920, 1080))
     FrameCount = int(INPUT_VIDEO.get(cv2.CAP_PROP_FRAME_COUNT))
     RectImage1 = Rect((360, 120), (197, 22, 92), radius=8).image
     RectImage2 = Rect((360, 10), (255, 255, 255), radius=5).image
@@ -390,11 +387,11 @@ def Edit(clip: int, textContent: str, callback: callable = None) -> None:
         if callback: callback(i)
     INPUT_VIDEO.release()
     OUTPUT_VIDEO.release()
-    subprocess.call(f'ffmpeg -i {FILE_PATH}export/{filename} -i {FILE_PATH}download/{filename} -c:v copy {FILE_PATH}{filename} -loglevel quiet -y')
+    subprocess.call(f'ffmpeg -i {PATH}export/{filename} -i {PATH}download/{filename} -c:v copy {PATH}{filename} -loglevel quiet -y')
 
 
 def main():
-    Edit(991466429, 'Streamer Name')
+    Edit('src/video/', 991466429, 'Streamer Name')
     pass
 
 
