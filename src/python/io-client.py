@@ -9,6 +9,11 @@ def connect():
 
 
 @sio.event
+def edit(clip: int) -> None:
+    pass
+
+
+@sio.event
 def my_message(data):
     print('message received with ', data)
     sio.emit('my response', {'response': 'my response'})
