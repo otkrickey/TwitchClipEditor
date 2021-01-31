@@ -5,7 +5,7 @@ sio = socketio.Client()
 
 def logger(value: str, args: list[str]):
     _ = ''.join(['[%s]' % s for s in args])
-    sio.emit('python_logger', value, room=client_sid['nodejs'])
+    sio.emit('python_logger', value)
     print(_)
     return _
 
