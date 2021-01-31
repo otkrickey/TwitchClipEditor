@@ -342,7 +342,7 @@ def mask(back: np.ndarray, front: np.ndarray, position: tuple[int, int]) -> np.n
 FILE_PATH = 'src/video/'
 
 
-def Edit(clip: int, textContent: str) -> None:
+def Edit(clip: int, textContent: str, callback: callable(int)) -> None:
     """
     Edit Video
     --------------------------------
@@ -386,6 +386,7 @@ def Edit(clip: int, textContent: str) -> None:
         frame = mask(frame, *FrontImage2.t(i))
         frame = mask(frame, *FrontImage3.t(i))
         OUTPUT_VIDEO.write(frame)
+        callback(i)
     INPUT_VIDEO.release()
     OUTPUT_VIDEO.release()
     subprocess.call(f'ffmpeg -i {FILE_PATH}export/{filename} -i {FILE_PATH}download/{filename} -c:v copy {FILE_PATH}{filename} -loglevel quiet -y')
