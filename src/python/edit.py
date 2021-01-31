@@ -1,10 +1,8 @@
 import math
 import subprocess
-from typing import Tuple, Union
 
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
 from PIL import Image, ImageDraw, ImageFont
 
 

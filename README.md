@@ -25,9 +25,6 @@ npm install
 * `cv2`
 * `PIL`
 * `numpy`
-* `eventlet`
-* `socketio`
-* `matplotlib`
 
 ```bash
 pip install -r requirements.txt
