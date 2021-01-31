@@ -4,6 +4,10 @@ const { app, BrowserWindow, Menu, ipcMain, globalShortcut, ipcRenderer } = requi
 const fs = require('fs');
 // PythonShell
 const { PythonShell } = require('python-shell');
+// socket.io-Server
+var fs = require('fs');
+var http = require('http');
+var server = http.createServer();
 // Socket.io-Client
 const io = require('socket.io-client');
 
@@ -105,7 +109,7 @@ ipcMain.handle('python_server_port', function (event, value) { return port });
 
 //----------Socket.io----------//
 // Create Server
-const server = new PythonShell('src/python/socket.io.py', { args: ['-p', 8080] });
+// const server = new PythonShell('src/python/socket.io.py', { args: ['-p', 8080] });
 // Connect to Server
 const socket = io.connect(`ws://localhost:8080`);
 // Register client to Server
