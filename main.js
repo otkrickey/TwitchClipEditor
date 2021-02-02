@@ -8,6 +8,7 @@ const { PythonShell } = require('python-shell');
 // socket.io-Server
 const { Server } = require('socket.io');
 const io = new Server(PORT);
+const Clients = {};
 // Socket.io-Client
 // const io = require('socket.io-client');
 
@@ -103,7 +104,7 @@ function findByRank(event = {}, id = 0) {
 ipcMain.handle('findByRank', findByRank);
 ipcMain.handle('chrome_connected', function (event, value) { logger('Connected.', ['chrome', 'socket.io-client']); });
 ipcMain.handle('chrome_logger', function (event, value) { logger(value, ['chrome']); });
-ipcMain.handle('python_StartEdit', function (event, value) { socket.emit('StartEdit', value); });
+ipcMain.handle('python_StartEdit', function (event, value) { logger(value, ['chrome', 'editor']); io.to(Clients.python).emit('edit', value); });
 ipcMain.handle('python_server_port', function (event, value) { return port });
 //---------------------------//
 
@@ -120,17 +121,16 @@ ipcMain.handle('python_server_port', function (event, value) { return port });
 //------------------------------------//
 
 //----------Socket.io-Client----------//
-const Clients = {};
-io.sockets.on("connection", function (socket) {
-    socket.on('define_client', function (value) {
-        Clients[value] = socket.id;
-        logger(`${value}: ${socket.id}`, ['nodejs', 'socket.io-server']);
-    });
+io.on("connection", function (socket) {
+    socket.on('define_client', function (value) { Clients[value] = socket.id; logger(`${value}: ${socket.id}`, ['nodejs', 'socket.io-server']); });
+    socket.on('editor', function (value) { io.to(Clients.chrome).emit('editor', value); });
+    socket.on('python_logger', function (value) { logger(value, ['python', 'socket.io-client']); });
 });
 //------------------------------------//
 
 //----------Python----------//
-const python = new PythonShell('src/python/io-client.py', { args: ['-p', PORT] });
+// const python = new PythonShell('src/python/io-client.py', { args: ['-p', PORT] });
+const python = new PythonShell('src/python/test.py', { args: ['-p', PORT] });
 //--------------------------//
 
 //----------MAIN PROCESS----------//
@@ -138,10 +138,9 @@ const python = new PythonShell('src/python/io-client.py', { args: ['-p', PORT] }
 app.on('ready', function () {
     createWindow();
     initWindowMenu();
-    // initShortcut(['ctrl+n', 'ctrl+p', 'ctrl+enter', 'shift+enter']);
-    initShortcut(['ctrl+n', 'ctrl+p', 'ctrl+enter']);
+    initShortcut(['ctrl+n', 'ctrl+p', 'ctrl+enter', 'shift+enter']);
+    // initShortcut(['ctrl+n', 'ctrl+p', 'ctrl+enter']);
 });
-
 // finish
 app.on('window-all-closed', function () { if (process.platform !== 'darwin') { app.quit(); } });
 //--------------------------------//
