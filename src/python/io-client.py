@@ -1,6 +1,12 @@
 import socketio
+
 from edit import Edit  # type: ignore
+
 sio = socketio.Client()
+
+
+def ic(value) -> None:
+    print(f'{locals()}: {value}')
 
 
 def logger(value: str, args: list[str]):
@@ -16,8 +22,11 @@ def connect():
 
 
 @sio.event
-def edit(clip: int) -> None:
-    pass
+def edit(clip) -> None:
+    ic(clip)
+    for i in range(int(clip)):
+        sio.emit('editor', i)
+        print(i)
 
 
 @sio.event
