@@ -133,7 +133,7 @@ function initShortcut() {
         key = 'shift+enter',
         node = undefined,
         action = function (node) {
-            p(2400);
+            p();
         }
     );
 }
@@ -158,7 +158,7 @@ function initEventListener() {
 function logger(value) {
     ipcRenderer.invoke('chrome_logger', value);
 }
-function p(value = 6000) { ipcRenderer.invoke('python_StartEdit', value); }
+function p(value = 2000) { ipcRenderer.invoke('python_StartEdit', value); }
 //-----------------------//
 //----------Main Function----------//
 /**
@@ -180,7 +180,7 @@ const socket = io(`ws://localhost:8080`);
 // Register client to Server
 socket.emit('define_client', 'chrome');
 socket.on('connect', function (value) { ipcRenderer.invoke('chrome_connected', 'chrome'); });
-socket.on('python_Editing', function (value) { AppData.Nodes.progress.style.width = `${Number(value) / 10}px`; });
+socket.on('editor', function (value) { AppData.Nodes.progress.style.width = `${Number(value) / 10}px`; });
 //-----------------------------//
 //----------Main Process----------//
 window.onload = function () {
