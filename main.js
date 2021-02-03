@@ -129,8 +129,8 @@ io.on("connection", function (socket) {
 //------------------------------------//
 
 //----------Python----------//
-// const python = new PythonShell('src/python/io-client.py', { args: ['-p', PORT] });
-const python = new PythonShell('src/python/test.py', { args: ['-p', PORT] });
+const python = new PythonShell('src/python/socket.io.py', { args: ['-p', PORT] });
+// const python = new PythonShell('src/python/test.py', { args: ['-p', PORT] });
 //--------------------------//
 
 //----------MAIN PROCESS----------//
