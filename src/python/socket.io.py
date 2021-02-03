@@ -75,9 +75,7 @@ def connect():
 
 @sio.event
 def edit(clip) -> None:
-    for i in range(int(clip)):
-        sio.emit('editor', i)
-        print(i)
+    Edit('src/video/', 991466429, 'Streamer Name')
 
 
 @sio.event
