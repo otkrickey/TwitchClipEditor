@@ -1,6 +1,6 @@
 import socketio
 
-from edit import Edit  # type: ignore
+from tools import Edit  # type: ignore
 
 sio = socketio.Client()
 
